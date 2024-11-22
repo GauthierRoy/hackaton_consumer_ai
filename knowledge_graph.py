@@ -124,14 +124,38 @@ for node in G.nodes():
     else:
         node_texts.append("")
 
+x_nodes_white = x_nodes.copy()
+y_nodes_white = y_nodes.copy()
+
+fig.add_trace(go.Scatter(
+    x=x_nodes_white, y=y_nodes_white,
+    mode='markers',
+    marker=dict(
+        size=24,  # Slightly larger than the orange nodes
+        color='white',
+        line=dict(
+            color='white',
+            width=0  # No border
+        )
+    ),
+    hoverinfo='none'  # Disable hover info for these nodes
+))
+
 fig.add_trace(go.Scatter(
     x=x_nodes, y=y_nodes,
     mode='markers+text',
-    marker=dict(size=20, color=node_colors),
-    text=node_texts,  # Use the conditional text list
+    marker=dict(
+        size=20,
+        color=node_colors,
+        line=dict(
+            color='black',
+            width=1
+        )
+    ),
+    text=node_texts,
     textposition="bottom center",
     hoverinfo="text",
-    hovertext=node_hovertexts  # Use hover texts for all nodes
+    hovertext=node_hovertexts
 ))
 
 # Customize layout
