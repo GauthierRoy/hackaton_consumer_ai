@@ -29,6 +29,11 @@ class HistoryStorage:
     def store_conversion(self, conversion):
         if 'message' in conversion:
             conversion = conversion['message']
+        # only some keys are needed
+        if not 'role' in conversion or not 'content' in conversion or not conversion['content']:
+            return
+        conversion = {key: conversion[key] for key in ['role', 'content']}
+        
         self.convert_history.append(conversion)
         store_data_to_file(self.convert_history, FILE_CONVERSION_PATH)
 

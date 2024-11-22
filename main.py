@@ -1,10 +1,12 @@
 from edge_llm.edge_llm import EdgeLlmStream
-edge_llm = EdgeLlmStream("qwen2.5:3b")
+edge_llm = EdgeLlmStream("qwen2.5:7b")
 
-anwser = edge_llm.chat([
+stream = edge_llm.chat([
     {
         "role":"user",
-        "content":"J'aimes la soleil et toi ?"
+        "content":"J'aimes la pluie et toi ?"
     }
 ]
 )
+for chunk in stream:
+    print(chunk, end="")

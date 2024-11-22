@@ -46,9 +46,10 @@ class EdgeLlmStream:
         if mistakes:
             answer = ""
             for response_chunk in self._answer_to_mistakes(mistakes):
-                self.history_storage.store_conversion(response_chunk)
                 yield response_chunk['message']['content']
                 answer += response_chunk['message']['content']
+            yield "\n"
+
             self.history_storage.store_conversion(
                 {
                     'role': 'assistant',
@@ -63,11 +64,12 @@ class EdgeLlmStream:
             messages=messages,
             stream=True
         )
+        
+        answer = ""
         for chunk in stream:
-            answer = ""
-            self.history_storage.store_conversion(response_chunk)
             yield chunk['message']['content'] 
             answer += chunk['message']['content']
+        yield "\n"
         self.history_storage.store_conversion(
             {
                 'role': 'assistant',
