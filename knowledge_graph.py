@@ -91,36 +91,38 @@ fig.add_trace(go.Scatter(
 color_rgb = '255, 165, 0'  # Orange for all nodes
 
 # Function to calculate average opacity for main nodes based on connected nodes
-def calculate_average_opacity(graph, main_node):
-    # Use successors for directed edges from level to category and category to topic
-    connected_nodes = list(graph.successors(main_node))
+def calculate_average_opacity(graph, node):
+    connected_nodes = list(graph.successors(node))
     if not connected_nodes:
-        return 1  # Default opacity if no connected nodes
-    opacities = [graph.nodes[node].get('opacity', 1) for node in connected_nodes]
-    average_opacity = sum(opacities) / len(opacities)
-    return average_opacity
+        # Return a default opacity (e.g., 1.0) if the node doesn't have an 'opacity' attribute
+        return graph.nodes[node].get('opacity', 1.0)
+    opacities = [graph.nodes[n].get('opacity', 1.0) for n in connected_nodes]
+    return sum(opacities) / len(opacities)
 
-# Apply average opacity to all nodes
-for node in G.nodes():
-    G.nodes[node]['opacity'] = calculate_average_opacity(G, node)
+# Update node opacities based on the data in FrenchA1B2Topics.py
+for level, categories in nested_dict_clean.items():
+    for category, topics in categories.items():
+        for topic_name, topic_desc, opacity in topics:
+            node_name = f"{category}_{topic_name.replace(' ', '_')}"
+            if node_name in G.nodes:
+                G.nodes[node_name]['opacity'] = opacity
 
 # Now construct the node colors with the updated opacities
 node_colors = []
-node_texts = []  # List to hold text labels for nodes
-node_hovertexts = []  # List to hold hover texts for nodes
+node_texts = []
+node_hovertexts = []
 
 for node in G.nodes():
-    opacity = G.nodes[node].get('opacity', 1)  # Use the updated opacity
+    opacity = G.nodes[node].get('opacity', 0)
     rgba_color = f'rgba({color_rgb}, {opacity})'
     node_colors.append(rgba_color)
-    print(f"Node: {node}, Color: {rgba_color}")  # Debugging output
     # Set hover text for all nodes
-    node_hovertexts.append(f"{node} ({G.nodes[node].get('title', '')})")  # Include title in hover text
+    node_hovertexts.append(f"{node} ({G.nodes[node].get('title', '')})")
     # Only add text labels for non-Topic nodes
     if G.nodes[node]['type'] != 'Topic':
-        node_texts.append(node)  # Use node name as label
+        node_texts.append(node)
     else:
-        node_texts.append("")  # No label for Topic nodes
+        node_texts.append("")
 
 fig.add_trace(go.Scatter(
     x=x_nodes, y=y_nodes,
@@ -145,6 +147,3 @@ fig.update_layout(
 
 # Show the graph
 fig.show()
-
-for node in G.nodes():
-    print(f"Node: {node}, Opacity: {G.nodes[node]['opacity']}")
