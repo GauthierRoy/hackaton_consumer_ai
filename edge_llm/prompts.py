@@ -13,9 +13,9 @@ You are given French mistakes. Return a phrase to explain to the mistakes pointi
 Le verbe 'J'aimes' doit être 'J'aime' à la 1re personne du singulier.
 
 #INPUT
-{'word_error': 'soleil', 'rule': 'Accord de nombre erroné\xa0: «\xa0soleil\xa0» devrait être au pluriel.', 'suggestion': ['soleils']}
+{'word_error': 'feuille', 'rule': 'Accord de nombre erroné\xa0: «\xa0feuille\xa0» devrait être au pluriel.', 'suggestion': ['feuilles']}
 ## OUTPUT
-Le mot 'soleil' devrait être au pluriel 'soleils'.
+Le mot 'feuille' devrait être au pluriel: 'feuilles'.
 """
 
 PROMPT_FRENCH_ASSISTANT ="""
@@ -36,5 +36,5 @@ YOU ARE A FRENCH LANGUAGE TUTOR FOR BEGINNERS. ANSWER AS SIMPLY AND CLEARLY AS P
 **A:** "Bonjour, ca va et toi ?"
 
 **Q:** Il fait beau aujourdhui.  
-**A:** Oui tu as raison, tu va bien ?
+**A:** Oui tu as raison, tu vas bien ?
 """

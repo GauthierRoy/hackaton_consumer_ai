@@ -1,9 +1,11 @@
 from pygrammalecte import grammalecte_text,GrammalecteGrammarMessage
 
+from .history_storage import HistoryStorage
+
 class DetectLangageMistakes:
 
     def __init__(self):
-        self.mistakes_history = []
+        self.history_storage = HistoryStorage()
 
     def _transform_grammarlect_error(self,text:str,messages:list[GrammalecteGrammarMessage]) -> dict:
         errors = []
@@ -30,5 +32,5 @@ class DetectLangageMistakes:
             mistakes_formatted = self._transform_grammarlect_error(text,mistakes)
             if not mistakes_formatted: 
                 return False
-        self.mistakes_history.extend(mistakes_formatted)
+        self.history_storage.store_mistake(mistakes_formatted)
         return mistakes_formatted
