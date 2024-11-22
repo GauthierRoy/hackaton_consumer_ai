@@ -88,30 +88,21 @@ fig.add_trace(go.Scatter(
 ))
 
 # Define RGB values for colors
-color_rgb = {
-    'Level': '0, 0, 255',  # Blue
-    'Category': '0, 128, 0',  # Green
-    'Topic': '255, 165, 0'  # Orange
-}
+color_rgb = '255, 165, 0'  # Orange for all nodes
 
 # Function to calculate average opacity for main nodes based on connected nodes
 def calculate_average_opacity(graph, main_node):
-    connected_nodes = list(graph.successors(main_node))  # Use successors for directed edges from level to category
+    # Use successors for directed edges from level to category and category to topic
+    connected_nodes = list(graph.successors(main_node))
     if not connected_nodes:
         return 1  # Default opacity if no connected nodes
     opacities = [graph.nodes[node].get('opacity', 1) for node in connected_nodes]
     average_opacity = sum(opacities) / len(opacities)
     return average_opacity
 
-# First, apply average opacity to Category nodes
+# Apply average opacity to all nodes
 for node in G.nodes():
-    node_type = G.nodes[node]['type']
-    if node_type == 'Category':
-        G.nodes[node]['opacity'] = calculate_average_opacity(G, node)
-
-# Then, apply average opacity to Level nodes
-for level in ['A1', 'A2', 'B1', 'B2']:
-    G.nodes[level]['opacity'] = calculate_average_opacity(G, level)
+    G.nodes[node]['opacity'] = calculate_average_opacity(G, node)
 
 # Now construct the node colors with the updated opacities
 node_colors = []
@@ -119,9 +110,8 @@ node_texts = []  # List to hold text labels for nodes
 node_hovertexts = []  # List to hold hover texts for nodes
 
 for node in G.nodes():
-    base_color = color_rgb[G.nodes[node]['type']]
     opacity = G.nodes[node].get('opacity', 1)  # Use the updated opacity
-    rgba_color = f'rgba({base_color}, {opacity})'
+    rgba_color = f'rgba({color_rgb}, {opacity})'
     node_colors.append(rgba_color)
     print(f"Node: {node}, Color: {rgba_color}")  # Debugging output
     # Set hover text for all nodes
@@ -155,3 +145,6 @@ fig.update_layout(
 
 # Show the graph
 fig.show()
+
+for node in G.nodes():
+    print(f"Node: {node}, Opacity: {G.nodes[node]['opacity']}")
