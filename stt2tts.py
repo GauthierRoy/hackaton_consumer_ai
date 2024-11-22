@@ -6,15 +6,50 @@ import whisper
 import sounddevice as sd
 import numpy as np
 import time
-from transformers import AutoTokenizer, AutoModelForCausalLM
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+from torch.ao.quantization import quantize_dynamic
+import torch
+
+def enfr_load_translator():
+    tokenizer = AutoTokenizer.from_pretrained("Helsinki-NLP/opus-mt-en-fr")
+    model = AutoModelForSeq2SeqLM.from_pretrained("Helsinki-NLP/opus-mt-en-fr")
+    compiled_model = torch.compile(model)
+
+
+    model_int8 = quantize_dynamic(
+        compiled_model,  # the original model
+        {torch.nn.Linear},  # a set of layers to dynamically quantize
+        dtype=torch.qint8)
+    return model_int8, tokenizer
+
+def fren_load_translator():
+    tokenizer = AutoTokenizer.from_pretrained("Helsinki-NLP/opus-mt-fr-en")
+    model = AutoModelForSeq2SeqLM.from_pretrained("Helsinki-NLP/opus-mt-fr-en")
+    compiled_model = torch.compile(model)
+
+
+    model_int8 = quantize_dynamic(
+        compiled_model,  # the original model
+        {torch.nn.Linear},  # a set of layers to dynamically quantize
+        dtype=torch.qint8)
+    return model_int8, tokenizer
 
 in_model = whisper.load_model("small")
 fra_model = VitsModel.from_pretrained("facebook/mms-tts-fra")
 fra_tokenizer = AutoTokenizer.from_pretrained("facebook/mms-tts-fra")
 eng_model = VitsModel.from_pretrained("facebook/mms-tts-eng")
 eng_tokenizer = AutoTokenizer.from_pretrained("facebook/mms-tts-eng")
-tokenizer = AutoTokenizer.from_pretrained("Qwen/Qwen2.5-0.5B")
-model = AutoModelForCausalLM.from_pretrained("Qwen/Qwen2.5-0.5B")
+# translation_tokenizer = AutoTokenizer.from_pretrained("Qwen/Qwen2.5-0.5B")
+# translation_model = AutoModelForCausalLM.from_pretrained("Qwen/Qwen2.5-0.5B")
+fren_model, fren_tokenizer = fren_load_translator()
+enfr_model, enfr_tokenizer = enfr_load_translator()
+
+
+def translate(model_int8, tokenizer, text):
+    input = tokenizer.encode(text, return_tensors="pt")
+    output = model_int8.generate(input)
+    answer = tokenizer.decode(output[0], skip_special_tokens=True)
+    return answer
 
 def transcribe_audio(audio, model, fs=16000):
     print("Transcribing...")
@@ -48,12 +83,6 @@ def detect_speech_and_record(threshold=0.2, duration=5, fs=16000):
                     print("Recording stopped.")
                     return audio
 
-def translate_text(text, model, tokenizer, target_lang="fr"):
-    inputs = tokenizer(text, return_tensors="pt")
-    outputs = model.generate(**inputs, forced_bos_token_id=tokenizer.lang_code_to_id[target_lang])
-    translated_text = tokenizer.decode(outputs[0], skip_special_tokens=True)
-    return translated_text
-
 while True:
     audio = detect_speech_and_record()
     st = time.time()
@@ -62,17 +91,20 @@ while True:
     print(f"Time taken: {time.time() - st:.2f} seconds")
     print("Detected Language:", lang)
 
-    # Translate the transcribed text
-    translated_text = translate_text(text, translation_model, translation_tokenizer)
-    print("Translated Text:", translated_text)
 
-    inputs = fra_tokenizer(text, return_tensors="pt")
-
-    with torch.no_grad():
-        output = fra_model(**inputs).waveform
-
-    print(f"Time taken: {time.time() - st:.2f} seconds")
-
-    sd.play(output.squeeze().numpy(), fra_model.config.sampling_rate)
-    sd.wait()
-    
+    if lang == "fr":
+        translated_text = translate(fren_model, fren_tokenizer, text)
+        inputs = eng_tokenizer(translated_text, return_tensors="pt")
+        with torch.no_grad():
+            output = eng_model(**inputs).waveform
+        print(f"Time taken: {time.time() - st:.2f} seconds")
+        sd.play(output.squeeze().numpy(), eng_model.config.sampling_rate)
+        sd.wait()
+    else:
+        translated_text = translate(enfr_model, enfr_tokenizer, text)
+        inputs = fra_tokenizer(translated_text, return_tensors="pt")
+        with torch.no_grad():
+            output = fra_model(**inputs).waveform
+        print(f"Time taken: {time.time() - st:.2f} seconds")
+        sd.play(output.squeeze().numpy(), fra_model.config.sampling_rate)
+        sd.wait()
