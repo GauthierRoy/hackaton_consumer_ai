@@ -424,10 +424,9 @@ class Big_LLM():
                         ]
                     }
             
-            new = self.get_llm_answer("ONLY OUTPUT THE DESIRED LIST with 4 elements " + sys_prompt + " ", f"The topic is the following {topic}")
+            new = self.get_llm_answer("ONLY OUTPUT THE DESIRED LIST with 4 elements " + sys_prompt + " ONLY use commas between the 4 elements, NO COMMA inside a given element", f"The topic is the following {topic}")
 
-            new = new.replace("'", '"').replace("\n", "").replace("[", "").replace("]", "")
-            print(new)
+            new = new.replace("\n", "").replace("[", "").replace("]", "")
             new = new.split(",")
 
             sample_dict["system_message"] = (new[0])
@@ -435,8 +434,9 @@ class Big_LLM():
             sample_dict["exercises"][0]["answer_expected"]["model_answer"] = new[2]
             sample_dict["exercises"][0]["answer_expected"]["grading_guidelines"] = new[3]
 
-            new = json.loads(new)
-            exercises[stri + str(i)] = new
+            exercises[stri + str(i)] = sample_dict
+
+            i+=1
             
         return exercises
 

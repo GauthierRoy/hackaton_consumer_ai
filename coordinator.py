@@ -94,21 +94,25 @@ class Coordinator:
 
     def run(self):
         
-        ##################################################
-        # Part where you run the little lm 
-        for k in self.context:
-            for chunk in self.small_llm.teach_a_lesson(self.context[k]):
-                print(chunk, end='', flush=True)  # flush=True ensures prompt appears immediately
+        for l in range(10):
 
-        conversation = self.small_llm.get_conversions()
-        mistakes = self.small_llm.get_mistakes()
+            print("ITERATION ", l)
+            ##################################################
+            # Part where you run the little lm 
+            for k in self.context:
+                for chunk in self.small_llm.teach_a_lesson(self.context[k]):
+                    print(chunk, end='', flush=True)  # flush=True ensures prompt appears immediately
 
-        # Expected output: history of the conversation (str), mistakes (str)
-        
-        ##################################################
+            conversation = self.small_llm.get_conversions()
+            mistakes = self.small_llm.get_mistakes()
 
-        _, _, exercises = self.big_llm.total_update(conversation, mistakes)
-        self.context = exercises
+            # Expected output: history of the conversation (str), mistakes (str)
+            
+            ##################################################
+
+            _, _, self.context = self.big_llm.total_update(conversation, mistakes, plotting=True)
+
+
 
         # Given the current 
 
