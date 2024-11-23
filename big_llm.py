@@ -268,20 +268,59 @@ class Big_LLM():
         max_topics = self.get_max_topics(self.all_levels[self.current_level])
 
         #Add suggested lessons
+        sampling_proba = self.get_level_sampling_probability(full_summary)
+        epslion = np.random.uniform(0, 1)
+
         suggested_new_lessons = []
-        for k in self.KG[self.all_levels[self.current_level]]:
-            for lesson in self.KG[self.all_levels[self.current_level]][k]:
-                if lesson[2] <= full_summary[self.all_levels[self.current_level]] and len(suggested_new_lessons) < 5:
-                    suggested_new_lessons.append(lesson[0] + " " + lesson[1])
 
-        if self.current_level > 0:
-            for k in self.KG[self.all_levels[self.current_level-1]]:
-                for lesson in self.KG[self.all_levels[self.current_level-1]][k]:
-                    if lesson[2] >= full_summary[self.all_levels[self.current_level-1]] and len(suggested_new_lessons) < 5:
-                        suggested_new_lessons.append(lesson[0] + " " + lesson[1])
+        for _ in range(5):
 
-                
+            if epslion < sampling_proba[0] or epslion < sampling_proba[1]:
+                if epslion < sampling_proba[0]:
+                    level = self.current_level -1
+                elif epslion < sampling_proba[1]:
+                    level = self.current_level
+
+                    for k in self.KG[self.all_levels[level]]:
+                        for lesson in self.KG[self.all_levels[level]][k]:
+                            if lesson[2] <= full_summary[self.all_levels[level]] and len(suggested_new_lessons) < 5:
+                                suggested_new_lessons.append(lesson[0] + " " + lesson[1])
+
+            else:
+                level = self.current_level + 1
+                suggested_new_lessons = []
+                for k in self.KG[self.all_levels[level]]:
+                    for lesson in self.KG[self.all_levels[level]][k]:
+                        if lesson[2] >= full_summary[self.all_levels[level]] and len(suggested_new_lessons) < 5:
+                            suggested_new_lessons.append(lesson[0] + " " + lesson[1])
+
+
+                    
         return min_topics, max_topics, suggested_new_lessons
+    
+    def get_level_sampling_probability(self, full_summary):
+        previous = self.current_level - 1 if self.current_level > 0 else None
+        next = self.current_level + 1, len(self.all_levels) - 1 if self.current_level < len(self.all_levels) - 1 else None
+        total = 0
+
+
+        if previous is not None:
+            total+=full_summary[self.all_levels[previous]]
+            previous_score = full_summary[self.all_levels[previous]]
+        else:
+            previous_score = 0
+
+        if next is not None:
+            total+=full_summary[self.all_levels[next]]
+            next_score = full_summary[self.all_levels[next]]
+        else:
+            next_score = 0
+
+        total+=full_summary[self.all_levels[self.current_level]]
+
+        return [previous_score/total, full_summary[self.all_levels[self.current_level]]/total, next_score/total]
+
+
     
     def get_min_topics(self, level:str, threshold=0.2):
         level_data = self.KG.get(level, {})
