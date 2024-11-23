@@ -1,9 +1,11 @@
 from big_llm import Big_LLM
-
+from edge_llm.edge_llm import EdgeLlmStream
 
 class Coordinator:
 
     def __init__(self):
+
+        self.small_llm = EdgeLlmStream("qwen2.5:7b")
         self.big_llm = Big_LLM()
 
     def run(self):
