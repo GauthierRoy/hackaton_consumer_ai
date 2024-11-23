@@ -57,7 +57,7 @@ class Big_LLM():
 
         response = requests.post(self.URL, headers=self.HEADERS, data=json.dumps(PAYLOAD), stream=True)
 
-        # Initialize an empty string to store the full response content
+        # transform llm response to knowledge graph
         full_response = ""
 
         for line in response.iter_lines():
@@ -80,6 +80,13 @@ class Big_LLM():
 
 
     def get_kg_summary(self):
+        """ 
+        outuput:
+        - min_topics: list of topics that need to be improved
+        - max_topics: list of topics that are mastered
+        - suggested_new_lessons: list of lessons that could be added
+        - suggested_former_lessons: list of lessons that could be reviewed
+        """
 
         #gather the summary of the KG for each level
         summary = {}
@@ -111,6 +118,7 @@ class Big_LLM():
         if not max_topics:
             max_topics = [min(summary, key=summary.get)]
 
+        # lesson[0] is the name, lesson[1] is the description, lesson[2] is the weight
         suggested_new_lessons = []
         for k in min_topics:
             for lesson in self.KG[k]:

@@ -34,3 +34,4 @@ class DetectLangageMistakes:
                 return False
         self.history_storage.store_mistake(mistakes_formatted)
         return mistakes_formatted
+
