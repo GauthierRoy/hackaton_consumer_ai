@@ -1,5 +1,5 @@
 from edge_llm.edge_llm import EdgeLlmStream
-edge_llm = EdgeLlmStream("qwen2.5:7b")
+edge_llm = EdgeLlmStream("qwen2.5:3b")
 
 # stream = edge_llm.chat([
 #     {

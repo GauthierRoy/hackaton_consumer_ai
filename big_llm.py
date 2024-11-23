@@ -26,27 +26,13 @@ class Big_LLM():
         self.all_levels = ["A1", "A2", "B1", "B2"]
         self.current_level = 0
 
+    def get_llm_answer(self, system_prompt, user_prompt):
 
-    def total_update(self, conversation, mistakes, native_lang, target_lang, plotting=False):
-        self.reply(conversation, mistakes, native_lang, target_lang)
-        min_topics, max_topics, suggested_new_lessons, suggested_former_lessons = self.get_kg_summary()
-
-        if plotting is True:
-            self.plot_graph()
-
-
-    def reply(self, conversation, mistakes, native_lang, target_lang):
-
-        if not self.has_initialised:
-            initial_prompt = self.make_initial_prompt(conversation, mistakes, native_lang, target_lang, self.KG)
-        else:
-            initial_prompt = self.make_update_prompt(conversation, mistakes, native_lang, target_lang, self.KG)
-        
         PAYLOAD = {
         "model": "llama-3.1-70b-instruct",
         "messages": [
-                { "role": "system", "content": f"You are an expert in language learning and evaluation, in particular for {target_lang}." },
-                { "role": "user", "content": initial_prompt},
+                { "role": "system", "content": system_prompt },
+                { "role": "user", "content": user_prompt},
             ],
             "max_tokens": 512,
             "temperature": 0.7,
@@ -74,8 +60,29 @@ class Big_LLM():
                     except json.JSONDecodeError:
                         continue
 
+        return full_response
+    
+
+    def total_update(self, conversation, mistakes, native_lang, target_lang, plotting=False):
+        self.reply(conversation, mistakes, native_lang, target_lang)
+        min_topics, max_topics, suggested_new_lessons, suggested_former_lessons = self.get_kg_summary()
+        exercises = self.make_prompts_for_future_lessons(suggested_new_lessons+suggested_former_lessons)
+
+        if plotting is True:
+            self.plot_graph()
+
+        return min_topics, max_topics, exercises
+
+
+    def reply(self, conversation, mistakes, native_lang, target_lang):
+
+        if not self.has_initialised:
+            initial_prompt = self.make_initial_prompt(conversation, mistakes, native_lang, target_lang, self.KG)
+        else:
+            initial_prompt = self.make_update_prompt(conversation, mistakes, native_lang, target_lang, self.KG)
+
         # Print or use the full response as needed
-        self.KG = full_response
+        self.KG = self.get_llm_answer(f"You are an expert in language learning and evaluation, in particular for {target_lang}.", initial_prompt)
         self.has_initialised = True
 
 
@@ -123,7 +130,7 @@ class Big_LLM():
         for k in min_topics:
             for lesson in self.KG[k]:
                 if lesson[2] <= 0.4:
-                    suggested_new_lessons.append((lesson[0], lesson[1]))
+                    suggested_new_lessons.append(lesson[0] + " " + lesson[1])
 
         #Figure out whether there is a weak spot in previous levels
         suggested_former_lessons = []
@@ -132,7 +139,7 @@ class Big_LLM():
 
             for lesson in self.KG[previous_level]:
                 if lesson[2] <= 0.7:
-                    suggested_former_lessons.append((lesson[0], lesson[1]))
+                    suggested_former_lessons.append(lesson[0] + " " + lesson[1])
                 
         return min_topics, max_topics, suggested_new_lessons, suggested_former_lessons
     
@@ -168,5 +175,13 @@ class Big_LLM():
         """
 
         return update_prompt
+    
+    def make_prompts_for_future_lessons(self, topics):
+
+        exercises = []
+        for topic in topics:
+            exercises.append(self.get_llm_answer(f"You are an expert in language learning and evaluation. Generate a lesson that can either be written expression (writing a sentence), or some grammar exercise or anything else you deem relevant. Always provide the question and a detailed answer hint. This text will be used to query a smaller LLM that is not so smart so be concise but precise enough", f"The topic is the following {topic}"))
+            
+        return exercises
 
  
