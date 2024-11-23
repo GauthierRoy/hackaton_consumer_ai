@@ -1,6 +1,7 @@
 import requests
 import json
 import numpy as np
+from typing import List
 
 from graph_plotting import graph_plotting
 
@@ -164,7 +165,7 @@ class Big_LLM():
         self.all_levels = ["A1", "A2", "B1", "B2"]
         self.current_level = 0
 
-    def get_llm_answer(self, system_prompt, user_prompt, long=False):
+    def get_llm_answer(self, system_prompt:str, user_prompt:str, long=False):
         
         max_tokens = 3000 if long else 512
 
@@ -202,7 +203,7 @@ class Big_LLM():
         return full_response
     
 
-    def total_update(self, conversation, mistakes, native_lang, target_lang, plotting=False):
+    def total_update(self, conversation:str, mistakes:str, native_lang="english", target_lang="french", plotting=False):
         self.reply(conversation, mistakes, native_lang, target_lang)
         min_topics, max_topics, suggested_new_lessons = self.get_kg_summary()
         print("HHHHHHHH", suggested_new_lessons)
@@ -216,7 +217,7 @@ class Big_LLM():
         return min_topics, max_topics, exercises
 
 
-    def reply(self, conversation, mistakes, native_lang, target_lang):
+    def reply(self, conversation:str, mistakes:str, native_lang:str, target_lang:str):
 
         if not self.has_initialised:
             initial_prompt = self.make_initial_prompt(conversation, mistakes, native_lang, target_lang, self.KG)
@@ -282,7 +283,7 @@ class Big_LLM():
                 
         return min_topics, max_topics, suggested_new_lessons
     
-    def get_min_topics(self, level, threshold=0.2):
+    def get_min_topics(self, level:str, threshold=0.2):
         level_data = self.KG.get(level, {})
         mean_scores = {}
         
@@ -300,7 +301,7 @@ class Big_LLM():
 
         return min_topics
     
-    def get_max_topics(self, level, threshold=0.8):
+    def get_max_topics(self, level:str, threshold=0.8):
         level_data = self.KG.get(level, {})
         mean_scores = {}
         
@@ -319,7 +320,7 @@ class Big_LLM():
         return max_topics
 
 
-    def make_initial_prompt(self, conversation, mistakes, native_lang, target_lang, KG):
+    def make_initial_prompt(self, conversation:str, mistakes:str, native_lang:str, target_lang:str, KG):
 
         initial_prompt = f"""
         The following conversation is from a student whose native language is {native_lang} and who is learning {target_lang}.
@@ -335,7 +336,7 @@ class Big_LLM():
         return initial_prompt
 
 
-    def make_update_prompt(self, conversation, mistakes, native_lang, target_lang, KG):
+    def make_update_prompt(self, conversation:str, mistakes:str, native_lang:str, target_lang:str, KG):
 
         update_prompt = f"""
         The following conversation is from a student whose native language is {native_lang} and who is learning {target_lang}.
@@ -348,7 +349,7 @@ class Big_LLM():
 
         return update_prompt
     
-    def make_prompts_for_future_lessons(self, topics):
+    def make_prompts_for_future_lessons(self, topics:List[str]):
 
         exercises = []
         for topic in topics:
