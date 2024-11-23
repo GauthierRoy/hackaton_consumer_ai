@@ -225,8 +225,11 @@ class Big_LLM():
 
         # Print or use the full response as needed
         kg = self.get_llm_answer(f"You are a JSON formatting assistant with expertise in language learning and evaluation, particularly for French. Your task is to process text inputs and return data extracted from them in JSON format only. You must not include any additional text, explanations, or commentary. Respond with JSON alone, adhering strictly to the format provided in the user's prompt of the knowledge graph.", initial_prompt, long=True)
-
+        print("KG:", kg)
+        
+        kg = kg.replace("'", '"')
         self.KG = json.loads(kg)
+
         self.has_initialised = True
 
 
@@ -275,7 +278,7 @@ class Big_LLM():
         # lesson[0] is the name, lesson[1] is the description, lesson[2] is the weight
         suggested_new_lessons = []
 
-        for _ in range(5):
+        for _ in range(4):
 
             if epslion < sampling_proba[0] or epslion < sampling_proba[1]:
                 if epslion < sampling_proba[0]:
@@ -398,10 +401,42 @@ class Big_LLM():
         return update_prompt
     
     def make_prompts_for_future_lessons(self, topics:List[str]):
+        
+        sys_prompt = """
+            ["<Provide a SHORT introductory instruction or context for the exercise.>", "<Clearly state the question or exercise prompt>", "<Provide an exemplary response for the given question>", "Specify detailed criteria to evaluate the response."]
+        """
 
-        exercises = []
+        stri = "lesson "
+        exercises = {}
+        i = 1
         for topic in topics:
-            exercises.append(self.get_llm_answer(f"You are an expert in language learning and evaluation. Generate a lesson that can either be written expression (writing a sentence), or some grammar exercise or anything else you deem relevant. Always provide the question and a detailed answer hint. This text will be used to query a smaller LLM that is not so smart so be concise but precise enough", f"The topic is the following {topic}"))
+
+            sample_dict = {
+                        "system_message": None,
+                        "exercises": [
+                            {
+                                "question": None,
+                                "answer_expected": {
+                                    "model_answer": None,
+                                    "grading_guidelines": None
+                                }
+                            }
+                        ]
+                    }
+            
+            new = self.get_llm_answer("ONLY OUTPUT THE DESIRED LIST with 4 elements " + sys_prompt + " ", f"The topic is the following {topic}")
+
+            new = new.replace("'", '"').replace("\n", "").replace("[", "").replace("]", "")
+            print(new)
+            new = new.split(",")
+
+            sample_dict["system_message"] = (new[0])
+            sample_dict["exercises"][0]["question"] = new[1]
+            sample_dict["exercises"][0]["answer_expected"]["model_answer"] = new[2]
+            sample_dict["exercises"][0]["answer_expected"]["grading_guidelines"] = new[3]
+
+            new = json.loads(new)
+            exercises[stri + str(i)] = new
             
         return exercises
 

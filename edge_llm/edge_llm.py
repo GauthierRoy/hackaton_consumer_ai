@@ -101,12 +101,12 @@ class EdgeLlmStream:
                 # Guideline: {answer_expected['grading_guidelines']}
 
                 'content': f"""
-Please verify this answer against the expected elements and provide feedback:
+                Please verify this answer against the expected elements and provide feedback:
 
-Student answer: {user_answer}
-Mistakes found: {mistakes}
+                Student answer: {user_answer}
+                Mistakes found: {mistakes}
 
-# FEEDBACK HERE PROVIDED DIRECTLY TO THE USER
+                # FEEDBACK HERE PROVIDED DIRECTLY TO THE USER :
                 """
             }
         ]
@@ -190,18 +190,18 @@ Mistakes found: {mistakes}
             yield response
         else:
             yield from self._process_and_store_conversion(self._answer_to_mistakes(mistakes))
-#         content_user = f"""
-# Please verify this answer against the expected elements and provide feedback, only provide the direct feedback, it will be given directly to the user.
+        #         content_user = f"""
+        # Please verify this answer against the expected elements and provide feedback, only provide the direct feedback, it will be given directly to the user.
 
-# Student answer: {user_answer}
-# Possible anwser: {answer_expected['model_answer']}
-# """
-#         mistakes = self.detect_langage_mistakes.spot_mistake(user_answer)
-#         if mistakes:
-#             content_user += f"Mistakes found: {mistakes}"
-#         content_user += """
-# # FEEDBACK HERE PROVIDED DIRECTLY TO THE USER :
-#                 """
+        # Student answer: {user_answer}
+        # Possible anwser: {answer_expected['model_answer']}
+        # """
+        #         mistakes = self.detect_langage_mistakes.spot_mistake(user_answer)
+        #         if mistakes:
+        #             content_user += f"Mistakes found: {mistakes}"
+        #         content_user += """
+        # # FEEDBACK HERE PROVIDED DIRECTLY TO THE USER :
+        #                 """
 
         
         # Verify the answer against expected elements
@@ -228,7 +228,8 @@ Mistakes found: {mistakes}
         # # Process and yield the feedback
         # yield from self._process_and_store_conversion(stream)
 
-    def teach_a_lesson(self, lesson: dict) -> None:
+    def teach_a_lesson(self, lesson):
+
         """
         Teach a complete lesson by processing the system prompt and all exercises.
         Interacts with the user for each question.
@@ -252,14 +253,15 @@ Mistakes found: {mistakes}
             'role': 'system',
             'content': lesson['system_message']
         }
+
         self.history_storage.store_conversion(system_message)
         
         # Initialize the lesson
         yield "Starting the lesson...\n"
-        yield f"System Prompt: {lesson['system_prompt']}\n\n"
+        yield f"System Prompt: {lesson['system_message']}\n\n"
         
         # Process each exercise
-        for i, exercise in enumerate(lesson['exercices'], 1):
+        for i, exercise in enumerate(lesson['exercises'], 1):
             yield f"\nExercise {i}:\n"
             
             # Use ask_a_question method for each exercise
@@ -267,10 +269,7 @@ Mistakes found: {mistakes}
                 question=exercise['question'],
                 answer_expected=exercise['answer_expected']
             )
-            # yield from self.ask_a_question_verify_with_detect_mistakes(
-            #     question=exercise['question'],
-            #     answer_expected=exercise['answer_expected']
-            # )
+
             
             yield "\n---\n"  # Separator between exercises
         
