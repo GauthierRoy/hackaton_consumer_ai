@@ -301,5 +301,6 @@ Mistakes found: {mistakes}
         """
         return self.history_storage.get_conversions()
 
-
+    def clean_history(self):
+        self.history_storage.clean_all()
 
