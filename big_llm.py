@@ -207,7 +207,6 @@ class Big_LLM():
 
         # Print or use the full response as needed
         kg = self.get_llm_answer(f"You are a JSON formatting assistant with expertise in language learning and evaluation, particularly for French. Your task is to process text inputs and return data extracted from them in JSON format only. You must not include any additional text, explanations, or commentary. Respond with JSON alone, adhering strictly to the format provided in the user's prompt of the knowledge graph.", initial_prompt, long=True)
-        print("KG:", kg)
         
         kg = kg.replace("'", '"')
         self.KG = json.loads(kg)
@@ -218,7 +217,9 @@ class Big_LLM():
         for level in self.KG:
             for category in self.KG[level]:
                 for lesson in self.KG[level][category]:
-                    lesson[2] = min(max(np.random.uniform(0, 1)*0.08, 0), 1)
+                    lesson[2] = min(max(np.random.uniform(-0.3, 0.5)*0.08, 0), 1)
+
+        print("KG:", kg)
 
 
     def get_kg_summary(self):
