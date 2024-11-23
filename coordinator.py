@@ -55,31 +55,6 @@ initial_test = {"A1": {
                 }
             }
         ]
-    },
-    "B2": {
-        "system_message": (
-            "Discutez des avantages et des inconvénients du télétravail. Rédigez une réponse structurée en huit phrases minimum, "
-            "en exprimant votre opinion avec des arguments."
-        ),
-        "exercises": [
-            {
-                "question": "Discutez des avantages et des inconvénients du télétravail. Rédigez une réponse structurée en huit phrases minimum, en exprimant votre opinion avec des arguments.",
-                "answer_expected": {
-                    "model_answer": (
-                        "Le télétravail présente de nombreux avantages, comme la flexibilité et le gain de temps en évitant les trajets. "
-                        "Cependant, il peut être difficile de se concentrer chez soi et de séparer la vie professionnelle et personnelle. "
-                        "Certaines personnes trouvent aussi le télétravail isolant, car elles manquent d'interactions sociales. "
-                        "D'un autre côté, il permet une meilleure gestion de son emploi du temps et favorise l'équilibre travail-vie personnelle. "
-                        "À mon avis, le télétravail est une bonne solution pour certaines professions, mais il n'est pas adapté à tout le monde."
-                    ),
-                    "grading_guidelines": (
-                        "The student should present a balanced argument, using connectors (e.g., 'cependant', 'd'un autre côté') and precise vocabulary. "
-                        "The response should show grammatical accuracy and the ability to organize ideas logically. "
-                        "Errors are acceptable as long as they do not hinder comprehension."
-                    )
-                }
-            }
-        ]
     }
 }
 

@@ -28,7 +28,6 @@ class Big_LLM():
                     ['Articles définis et indéfinis', 'Utilisation de le, la, les et un, une, des', 0],
                     ['Pronoms personnels sujets', 'Utilisation de je, tu, il/elle, nous, vous, ils/elles', 0],
                     ['Adjectifs qualificatifs', 'Accord des adjectifs en genre et en nombre', 0],
-                    ['Structure de la phrase simple', 'Construction de phrases simples sujet-verbe-objet', 0],
                     ['Négation', 'Formation de la négation avec ne... pas', 0],
                     ['Questions simples', 'Formation de questions avec qui, que, où, pourquoi', 0]
                 ],
@@ -36,7 +35,6 @@ class Big_LLM():
                     ['Présentations', 'Se présenter et poser des questions simples', 0],
                     ['Famille et relations', 'Nommer les membres de la famille et les relations', 0],
                     ['Maison et objets quotidiens', 'Décrire les pièces et objets courants', 0],
-                    ['Alimentation et boissons', 'Nommer des aliments et des boissons', 0],
                     ['Transports', 'Nommer les moyens de transport courants', 0],
                     ['Couleurs, nombres et jours', 'Apprendre les couleurs, nombres et jours', 0]
                 ],
@@ -44,7 +42,6 @@ class Big_LLM():
                     ['Genres des noms', 'Différencier masculin et féminin', 0],
                     ['Pluriels réguliers et irréguliers', 'Formation des pluriels (-s, -x)', 0],
                     ['Accents sur les voyelles', 'Utilisation correcte des accents (é, è, à, etc.)', 0],
-                    ['Liaison et élision', 'Usage des apostrophes et des liaisons', 0],
                     ['Confusions courantes', 'Différencier les homophones courants (a/à, et/est)', 0],
                     ['Ponctuation', 'Règles basiques de ponctuation', 0]
                 ],
@@ -53,7 +50,6 @@ class Big_LLM():
                     ['Présent des verbes en -IR', 'Conjuguer les verbes réguliers en -IR', 0],
                     ['Présent des verbes irréguliers', 'Conjuguer les verbes être, avoir, aller, faire', 0],
                     ['Futur proche', 'Utiliser aller + infinitif pour parler du futur', 0],
-                    ['Impératif', "Donner des ordres ou conseils avec l'impératif", 0],
                     ['Verbes pronominaux', "Utilisation de se lever, s'appeler, etc.", 0]
                 ]
             },
@@ -63,7 +59,6 @@ class Big_LLM():
                     ['Pronoms compléments', 'Utilisation de me, te, lui, nous, vous, leur', 0],
                     ['Adjectifs démonstratifs', 'Utilisation de ce, cet, cette, ces', 0],
                     ['Adverbes de fréquence', 'Placer les adverbes (souvent, toujours, parfois)', 0],
-                    ['Comparatif et superlatif', 'Exprimer des comparaisons (plus que, moins que)', 0],
                     ['Discours rapporté au présent', "Utilisation de que et d'autres subordonnées", 0]
                 ],
                 'Vocabulaire': [
@@ -71,13 +66,11 @@ class Big_LLM():
                     ['Vie quotidienne', 'Parler de ses activités et de ses routines', 0],
                     ['Voyages et vacances', 'Nommer les lieux et les activités de voyage', 0],
                     ['Météo et environnement', 'Décrire la météo et parler de la nature', 0],
-                    ['Loisirs et intérêts', 'Parler de ses hobbies et activités', 0],
                     ['Achats et consommation', 'Nommer les produits et faire des achats', 0]
                 ],
                 'Orthographe': [
                     ['Accord sujet-verbe', 'Respecter les accords dans les phrases complexes', 0],
                     ['Pluriels irréguliers avancés', 'Formation des pluriels complexes (bijou -> bijoux)', 0],
-                    ['Accents et prononciation', "Maitriser les nuances d'accents sur les voyelles", 0],
                     ['Mots composés', "Comprendre l'écriture des mots composés", 0],
                     ['Homonymes et paronymes', "Différencier les mots proches (c'est/ses/ces)", 0]
                 ],
@@ -86,7 +79,6 @@ class Big_LLM():
                     ['Passé composé avec être', 'Conjuguer les verbes de mouvement au passé composé', 0],
                     ['Imparfait', 'Conjuguer les verbes pour décrire des actions habituelles ou continues', 0],
                     ['Futur simple', 'Utiliser le futur simple pour des événements à venir', 0],
-                    ['Conditionnel présent', 'Exprimer la politesse ou une hypothèse avec le conditionnel', 0],
                     ['Verbes pronominaux au passé', 'Conjuguer les verbes pronominaux au passé composé', 0]
                 ]
             },
@@ -95,7 +87,6 @@ class Big_LLM():
                     ['Pronoms relatifs', 'Utilisation de qui, que, dont, où', 0],
                     ['Exprimer le subjonctif présent', "Exprimer le doute, le désir, ou l'obligation", 0],
                     ['Voix passive', 'Formation et utilisation de la voix passive', 0],
-                    ['Pronoms toniques', 'Utilisation de moi, toi, lui, elle, nous, vous, eux, elles', 0],
                     ['Gérondif', 'Formation et utilisation du gérondif', 0]
                 ],
                 'Vocabulaire': [
@@ -103,14 +94,12 @@ class Big_LLM():
                     ['Éducation et études', "Parler de l'école, de l'université, et des formations", 0],
                     ['Médias et technologie', 'Nommer les outils technologiques et parler des médias', 0],
                     ['Vie sociale', 'Parler des interactions sociales et des relations', 0],
-                    ['Voyages et expériences', "Décrire des expériences de voyages ou d'aventures", 0],
                     ['Problèmes de société', 'Nommer les défis sociaux et économiques', 0]
                 ],
                 'Orthographe': [
                     ['Homophones grammaticaux complexes', 'Différencier leurs, ce/se, on/ont', 0],
                     ['Accord des participes passés', "Règles d'accord des participes avec avoir et être", 0],
                     ['Noms et adjectifs dérivés', 'Écriture correcte des dérivés (ex. science -> scientifique)', 0],
-                    ['Préfixes et suffixes', 'Comprendre les préfixes et suffixes pour créer des mots', 0],
                     ['Verbes irréguliers complexes', 'Écrire correctement les conjugaisons irrégulières', 0]
                 ],
                 'Conjugaison': [
@@ -118,7 +107,6 @@ class Big_LLM():
                     ['Futur antérieur', "Utiliser le futur antérieur pour parler d'actions futures accomplies", 0],
                     ['Conditionnel passé', 'Exprimer des regrets ou des hypothèses non réalisées', 0],
                     ['Participe présent', 'Utilisation et formation du participe présent', 0],
-                    ['Plus-que-parfait', 'Exprimer une action antérieure à une autre action passée', 0],
                     ['Discours indirect au passé', 'Rapporter des propos au passé', 0]
                 ]
             }, 
@@ -127,13 +115,10 @@ class Big_LLM():
                     ['Pronoms relatifs composés', 'Utilisation de lequel, laquelle, duquel, auquel, etc.', 0],
                     ['Concordance des temps avancée', 'Harmonisation des temps dans des phrases complexes', 0],
                     ['Hypothèses', 'Utilisation de si + imparfait, conditionnel ou plus-que-parfait', 0],
-                    ['Connecteurs logiques', 'Utilisation de connecteurs comme cependant, néanmoins, puisque', 0],
                     ['Expressions idiomatiques', 'Comprendre et utiliser des expressions courantes', 0]
                 ],
                 'Vocabulaire': [
                     ['Relations internationales', 'Nommer et décrire les enjeux internationaux', 0],
-                    ['Actualités et politique', "Parler des sujets d'actualité et des systèmes politiques", 0],
-                    ['Sciences et technologies', 'Nommer des avancées scientifiques et parler des nouvelles technologies', 0],
                     ['Arts et culture', "Parler de la littérature, de l'art et de la musique", 0],
                     ['Développement durable', "Nommer les concepts liés à l'écologie et au développement durable", 0],
                     ['Vie professionnelle', 'Parler des compétences, des métiers et des enjeux professionnels', 0]
@@ -142,15 +127,12 @@ class Big_LLM():
                     ['Néologismes et emprunts', "Écrire correctement les mots nouveaux ou empruntés à d'autres langues", 0],
                     ['Subtilités des accents', 'Maîtriser les nuances des accents sur les voyelles complexes', 0],
                     ['Homophones avancés', 'Différencier des homophones rares comme bal/balle, saut/sot', 0],
-                    ['Ponctuation stylistique', 'Utilisation avancée des parenthèses, tirets longs et points-virgules', 0],
-                    ['Orthographe des verbes complexes', 'Écrire correctement les conjugaisons des verbes rares', 0],
                     ['Pluriels complexes', "Gérer les pluriels des noms composés et des mots d'origine étrangère", 0]
                 ],
                 'Conjugaison': [
                     ['Subjonctif passé', 'Conjuguer les verbes réguliers et irréguliers au subjonctif passé', 0],
                     ['Conditionnel passé deuxième forme', 'Utilisation avancée du conditionnel passé', 0],
                     ['Futur antérieur avancé', 'Expliquer des actions futures déjà terminées', 0],
-                    ['Plus-que-parfait avancé', 'Utiliser le plus-que-parfait dans des contextes complexes', 0],
                     ['Participes passés et accords complexes', 'Accords avancés des participes passés', 0]
                 ]
             }
@@ -232,6 +214,12 @@ class Big_LLM():
 
         self.has_initialised = True
 
+        #Put some noise into the KG
+        for level in self.KG:
+            for category in self.KG[level]:
+                for lesson in self.KG[level][category]:
+                    lesson[2] = min(max(np.random.uniform(0, 1)*0.08, 0), 1)
+
 
     def get_kg_summary(self):
         """ 
@@ -278,7 +266,7 @@ class Big_LLM():
         # lesson[0] is the name, lesson[1] is the description, lesson[2] is the weight
         suggested_new_lessons = []
 
-        for _ in range(4):
+        for _ in range(3):
 
             if epslion < sampling_proba[0] or epslion < sampling_proba[1]:
                 if epslion < sampling_proba[0]:
