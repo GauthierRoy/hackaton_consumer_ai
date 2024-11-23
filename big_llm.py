@@ -185,6 +185,7 @@ class Big_LLM():
 
         response = requests.post(self.URL, headers=self.HEADERS, data=json.dumps(PAYLOAD), stream=True)
 
+        # transform llm response to knowledge graph
         full_response = ""
 
         for line in response.iter_lines():
@@ -230,6 +231,13 @@ class Big_LLM():
 
 
     def get_kg_summary(self):
+        """ 
+        outuput:
+        - min_topics: list of topics that need to be improved
+        - max_topics: list of topics that are mastered
+        - suggested_new_lessons: list of lessons that could be added
+        - suggested_former_lessons: list of lessons that could be reviewed
+        """
 
         #gather the summary of the KG for each level
         summary = {}
@@ -264,6 +272,7 @@ class Big_LLM():
         sampling_proba = self.get_level_sampling_probability(full_summary)
         epslion = np.random.uniform(0, 1)
 
+        # lesson[0] is the name, lesson[1] is the description, lesson[2] is the weight
         suggested_new_lessons = []
 
         for _ in range(5):

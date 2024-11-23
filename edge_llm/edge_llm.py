@@ -303,3 +303,4 @@ Mistakes found: {mistakes}
 
     def clean_history(self):
         self.history_storage.clean_all()
+

@@ -7,6 +7,7 @@ class Coordinator:
 
         self.small_llm = EdgeLlmStream("qwen2.5:7b")
         self.big_llm = Big_LLM()
+        self.edge_llm = EdgeLlmStream("qwen2.5:7b")
 
     def run(self):
         # Pause and wait for user input
