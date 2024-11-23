@@ -1,6 +1,6 @@
 from big_llm import Big_LLM
-from edge_llm.edge_llm import EdgeLlmStream
-from main_pi import *
+from edge_llm.edge_llm_2 import EdgeLlmStream
+from main_pi import enfr_load_translator, fren_load_translator, translate, transcribe_audio, detect_speech_and_record
 
 initial_test = {"A1": {
     "system_message": "Présentez-vous en une ou deux phrases. Dites votre nom, votre âge et où vous habitez.",
@@ -101,7 +101,7 @@ class Coordinator:
             # Part where you run the little lm
             for k in self.context:
                 for chunk in self.small_llm.teach_a_lesson(self.context[k]):
-                    text.append(chunk, end='', flush=True)  # flush=True ensures prompt appears immediately
+                    text.append(chunk)  # flush=True ensures prompt appears immediately
 
             inputs = eng_tokenizer(text, return_tensors="pt")
             with torch.no_grad():

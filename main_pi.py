@@ -77,46 +77,9 @@ def detect_speech_and_record(threshold=0.2, duration=5, fs=16000):
         if np.max(np.abs(audio)) > threshold:
             print("Detected speech! Recording...")
             recorded_audio = [audio]
-            while True:
-                rec_audio = sd.rec(int(2 * fs), samplerate=fs, channels=1, dtyp>
-                sd.wait()
-                recorded_audio.append(rec_audio)
-                if np.max(np.abs(rec_audio)) < threshold:
-                    print("Recording stopped.")
-                    return np.concatenate(recorded_audio)
-
-while True:
-    audio = detect_speech_and_record()
-    st = time.time()
-    text, lang = transcribe_audio(audio, in_model)
-    print("Transcribed Text:", text)
-    print(f"Time taken: {time.time() - st:.2f} seconds")
-    
-    
-    print("Detected Language:", lang)
-
-
-    if lang == "fr":
-        translated_text = translate(fren_model, fren_tokenizer, text)
-        print("Translated text:", translated_text)
-        st = time.time()
-
-        inputs = eng_tokenizer(translated_text, return_tensors="pt")
-        with torch.no_grad():
-            output = eng_model(**inputs).waveform
-        print(f"Time taken: {time.time() - st:.2f} seconds")
-        sd.play(output.squeeze().numpy(), eng_model.config.sampling_rate)
-        sd.wait()
-        del inputs, output, translated_text
-    else:
-        translated_text = translate(enfr_model, enfr_tokenizer, text)
-        print("Translated text:", translated_text)
-        st = time.time()
-        inputs = fra_tokenizer(translated_text, return_tensors="pt")
-        with torch.no_grad():
-            output = fra_model(**inputs).waveform
-        print(f"Time taken: {time.time() - st:.2f} seconds")
-        sd.play(output.squeeze().numpy(), fra_model.config.sampling_rate)
-        sd.wait()
-        del inputs, output, translated_text
-    gc.collect()
+            rec_audio = sd.rec(int(2 * fs), samplerate=fs, channels=1)
+            sd.wait()
+            recorded_audio.append(rec_audio)
+            if np.max(np.abs(rec_audio)) < threshold:
+                print("Recording stopped.")
+                return np.concatenate(recorded_audio)

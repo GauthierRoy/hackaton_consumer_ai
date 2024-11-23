@@ -214,10 +214,12 @@ class Big_LLM():
         self.has_initialised = True
 
         #Put some noise into the KG
+        
         for level in self.KG:
             for category in self.KG[level]:
                 for lesson in self.KG[level][category]:
                     lesson[2] = min(max(np.random.uniform(-0.3, 0.5)*0.08+lesson[2], 0), 1)
+        
 
         print("KG:", kg)
 
