@@ -2,6 +2,7 @@ import requests
 import json
 import numpy as np
 from typing import List
+import random
 
 from graph_plotting import graph_plotting
 
@@ -206,13 +207,10 @@ class Big_LLM():
     def total_update(self, conversation:str, mistakes:str, native_lang="english", target_lang="french", plotting=False):
         self.reply(conversation, mistakes, native_lang, target_lang)
         min_topics, max_topics, suggested_new_lessons = self.get_kg_summary()
-        print("HHHHHHHH", suggested_new_lessons)
         exercises = self.make_prompts_for_future_lessons(suggested_new_lessons)
 
         if plotting is True:
             graph_plotting(self.KG)
-
-        print("RESULTS:", min_topics, max_topics, exercises)
 
         return min_topics, max_topics, exercises
 
@@ -226,12 +224,8 @@ class Big_LLM():
 
         # Print or use the full response as needed
         kg = self.get_llm_answer(f"You are a JSON formatting assistant with expertise in language learning and evaluation, particularly for French. Your task is to process text inputs and return data extracted from them in JSON format only. You must not include any additional text, explanations, or commentary. Respond with JSON alone, adhering strictly to the format provided in the user's prompt of the knowledge graph.", initial_prompt, long=True)
-        print("kg:", kg)
 
         self.KG = json.loads(kg)
-        print("DONE here")
-
-        print("KGGGG:", type(self.KG), self.KG)
         self.has_initialised = True
 
 
@@ -258,7 +252,6 @@ class Big_LLM():
             if level>=self.current_level and np.mean(list(summary[self.all_levels[level]].values())) >= 0.8:
                 self.current_level = level
 
-        print("SUMMARY:", summary)
         full_summary = {}
         for level in summary:
             full_summary[level] = np.mean(list(summary[level].values()))
@@ -281,18 +274,25 @@ class Big_LLM():
                 elif epslion < sampling_proba[1]:
                     level = self.current_level
 
-                    for k in self.KG[self.all_levels[level]]:
-                        for lesson in self.KG[self.all_levels[level]][k]:
-                            if lesson[2] <= full_summary[self.all_levels[level]] and len(suggested_new_lessons) < 5:
-                                suggested_new_lessons.append(lesson[0] + " " + lesson[1])
+                    found = False
+                    while found == False:
+                        k = np.random.choice(list(self.KG[self.all_levels[level]].keys()))
+                        lesson = random.choice(self.KG[self.all_levels[level]][k])
+                        if lesson[2] <= full_summary[self.all_levels[level]] and lesson[0] + " " + lesson[1] not in suggested_new_lessons:
+                            found = True
+                            suggested_new_lessons.append(lesson[0] + " " + lesson[1])
 
             else:
                 level = self.current_level + 1
-                suggested_new_lessons = []
-                for k in self.KG[self.all_levels[level]]:
-                    for lesson in self.KG[self.all_levels[level]][k]:
-                        if lesson[2] >= full_summary[self.all_levels[level]] and len(suggested_new_lessons) < 5:
-                            suggested_new_lessons.append(lesson[0] + " " + lesson[1])
+
+                found = False
+                while found == False:
+                    k = np.random.choice(list(self.KG[self.all_levels[level]].keys()))
+                    lesson = random.choice(self.KG[self.all_levels[level]][k])
+                    if lesson[2] >= full_summary[self.all_levels[level]] and lesson[0] + " " + lesson[1] not in suggested_new_lessons:
+                        found = True
+                        suggested_new_lessons.append(lesson[0] + " " + lesson[1])
+
 
 
                     
@@ -300,7 +300,7 @@ class Big_LLM():
     
     def get_level_sampling_probability(self, full_summary):
         previous = self.current_level - 1 if self.current_level > 0 else None
-        next = self.current_level + 1, len(self.all_levels) - 1 if self.current_level < len(self.all_levels) - 1 else None
+        next = self.current_level + 1 if self.current_level < len(self.all_levels) - 1 else None
         total = 0
 
 
