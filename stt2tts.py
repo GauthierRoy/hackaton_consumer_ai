@@ -44,6 +44,9 @@ eng_tokenizer = AutoTokenizer.from_pretrained("facebook/mms-tts-eng")
 fren_model, fren_tokenizer = fren_load_translator()
 enfr_model, enfr_tokenizer = enfr_load_translator()
 
+eng_model = quantize_dynamic(eng_model, {torch.nn.Linear}, dtype=torch.qint8)
+fra_model = quantize_dynamic(fra_model, {torch.nn.Linear}, dtype=torch.qint8)
+
 
 def translate(model_int8, tokenizer, text):
     input = tokenizer.encode(text, return_tensors="pt")
