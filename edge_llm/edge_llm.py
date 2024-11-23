@@ -266,5 +266,14 @@ Mistakes found: {mistakes}
         # Conclude the lesson
         yield "\nLesson completed!"
 
+    def clean_history_and_mistakes(self):
+        self.history_storage = HistoryStorage()
+
+    def get_mistakes(self):
+        return self.history_storage.get_mistakes()
+    
+    def get_conversions(self):
+        return self.history_storage.get_conversions()
+
 
 
