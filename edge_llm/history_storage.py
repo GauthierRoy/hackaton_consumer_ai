@@ -22,6 +22,18 @@ class HistoryStorage:
         self.mistakes_history = retrieve_dict_from_file(FILE_ERROR_PATH) or []
         self.convert_history = retrieve_dict_from_file(FILE_CONVERSION_PATH) or []
 
+    def _clean_mistakes_history(self):
+        self.mistakes_history = []
+        store_data_to_file(self.mistakes_history, FILE_ERROR_PATH)
+    
+    def _clean_convert_history(self):
+        self.convert_history = []
+        store_data_to_file(self.convert_history, FILE_CONVERSION_PATH)
+
+    def clean_all(self):
+        self._clean_convert_history()
+        self._clean_mistakes_history()
+
     def store_mistake(self, mistake):
         self.mistakes_history.append(mistake)
         store_data_to_file(self.mistakes_history, FILE_ERROR_PATH)
