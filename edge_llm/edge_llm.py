@@ -232,14 +232,25 @@ Mistakes found: {mistakes}
         """
         Teach a complete lesson by processing the system prompt and all exercises.
         Interacts with the user for each question.
-        
         Args:
             lesson (dict): A dictionary containing the lesson structure with system_prompt and exercises
+            example lesson :
+            {
+                "system_message": "message intro lesson ex: intro leçon sur passé composé"
+                "exercices": [
+                    {
+                    "question": "",
+                    "answer_expected": {
+                        "model_answer": "exemple de réponse valable",
+                        "grading_guidelines": "aide pour évaluer la réponse"
+                    }
+                ]
+            }
         """
         # First, process the system prompt
         system_message = {
             'role': 'system',
-            'content': lesson['system_prompt']
+            'content': lesson['system_message']
         }
         self.history_storage.store_conversion(system_message)
         
@@ -267,9 +278,27 @@ Mistakes found: {mistakes}
         yield "\nLesson completed!"
 
     def get_mistakes(self):
+        """
+        [
+            {
+                "word_error":"the error maded",
+                "rule":"the rule broken",
+                "suggestion": OPTIONAL/ NOT ALWAYS "the error corrected"
+            },...
+        ]
+        """
         return self.history_storage.get_mistakes()
     
     def get_conversions(self):
+        """
+        [
+            {
+                "role": "user",
+                "content":"the text"
+            },...
+        ]
+        role can be user/system/assistant
+        """
         return self.history_storage.get_conversions()
 
 
